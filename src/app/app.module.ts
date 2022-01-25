@@ -1,16 +1,35 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http'; 
+
+import {CheckboxModule} from 'primeng/checkbox';
+import {DialogModule} from 'primeng/dialog';
+import {InputTextareaModule} from 'primeng/inputtextarea';
+
+import { VerbsComponent } from './verbs/verbs.component';
+import { VerbsSettingsComponent } from './verbs-settings/verbs-settings.component';
+
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    VerbsComponent,
+    VerbsSettingsComponent,
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    FormsModule,
+    CheckboxModule,
+    DialogModule,
+    HttpClientModule,
+    InputTextareaModule,
+    BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
