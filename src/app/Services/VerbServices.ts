@@ -7,16 +7,17 @@ import { HttpClient, HttpParams } from '@angular/common/http'
 })
 export class VerbService {
     apiURL: string = "https://frenchapi.azurewebsites.net/api/";
+    //apiURL: string = "https://localhost:44311/api/";
     constructor(private http: HttpClient) {
     }
 
-    getVerbs(ER: boolean, IR: boolean, RE: boolean, Avoir: boolean, Etre: boolean) {
+    getVerbs(ER: boolean, IR: boolean, RE: boolean) {
         const params = new HttpParams()
             .set('ErVerbs', ER)
             .set('IrVerbs', IR)
             .set('ReVerbs', RE)
-            .set('UsesAvoir', Avoir)
-            .set('UsesEtre', Etre)
+            .set('UsesAvoir', true)
+            .set('UsesEtre', true)
 
 
         return this.http.get<Array<Verb>>(this.apiURL + "verb", {params});

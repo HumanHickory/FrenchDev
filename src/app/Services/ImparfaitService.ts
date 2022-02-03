@@ -29,7 +29,9 @@ export class ImparfaitService {
 
         if (Verb.french == "être") {
             return this.Etre();
-        } else {
+        } else if(Verb.presentVerbTypeId == 16){
+            return this.StemChangingER();
+        }else {
             return this.Regular();
         }
 
@@ -79,6 +81,30 @@ export class ImparfaitService {
         } else {
             return "étaient";
         }
+    }
+
+    StemChangingER(){
+        var ending = "";
+        var smallerRoot = this.NousRoot.substring(0, this.NousRoot.length - 1);
+
+
+        if (this.Pronoun == "Je") {
+            ending = "çais";
+        } else if (this.Pronoun == "Tu") {
+            ending = "çais";
+        } else if (this.Pronoun == "On" || this.Pronoun == "Elle" || this.Pronoun == "Il") {
+            ending = "çait";
+        } else if (this.Pronoun == "Nous") {
+            ending = "cions";
+        } else if (this.Pronoun == "Vous") {
+            ending = "ciez";
+        } else if (this.Pronoun == "Ils" || this.Pronoun == "Elles") {
+            ending = "çaient";
+        }
+
+        this.Hint = "Take the present tense 'Nous' form ("+ this.NousForm +") and remove the -ons. Then add '" + ending + "'. Note the c changes to ç in every form but vous and nous."
+        
+        return smallerRoot + ending;
     }
 
 }

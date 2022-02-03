@@ -4,8 +4,10 @@ import { Verb } from 'src/app/Models/Verb';
 import { FuturService } from 'src/app/Services/FuturService';
 import { ImparfaitService } from 'src/app/Services/ImparfaitService';
 import { PresentTenseService } from 'src/app/Services/PresentTenseService';
+import { PasseComposeService } from 'src/app/Services/PasseComposeService';
 import { ErrorService } from '../Services/ErrorService';
 import { ErrorModel } from '../Models/ErrorModel';
+import { LocalStorageObject } from '../Models/LocalStorageObject';
 
 @Component({
   selector: 'app-verbs',
@@ -19,6 +21,7 @@ export class VerbsComponent {
   SelectedPronouns: string[] = ["Je", "Tu", "On", "Il", "Elle", "Nous", "Vous", "Ils", "Elles"];
   SelectedTenses: string[] = ["Present", "Futur", "Imparfait", "Passé Composé"];
   SelectedAuxilaryVerbs: string[] = ["Avoir", "Etre"];
+  SelectedPresentTenseOptions: string[] = ["Regular", "Irregular"];
   Verbs: Array<Verb> = [];
   Verb!: Verb;
   Tense: string = "";
@@ -32,6 +35,11 @@ export class VerbsComponent {
   Hint: string = "";
   ErrorDescription: string = "";
 
+  PasseComposeVerbs: Array<Verb> = [];
+  PresentTenseVerbs: Array<Verb> = [];
+  ImparfaitVerbs: Array<Verb> = [];
+  FuturVerbs: Array<Verb> = [];
+
   Display = false;
   DisplayError = false;
 
@@ -44,30 +52,19 @@ export class VerbsComponent {
       private presentTenseService: PresentTenseService,
       private futurService: FuturService,
       private imparfaitService: ImparfaitService,
+      private passeComposeService: PasseComposeService,
       private errorService: ErrorService
   ) { }
 
   ngOnInit() {
       this.Correct = "textSuccess";
-      let SavedVerbsListStr: any = localStorage.getItem("SavedVerbsList") == null ? "" : localStorage.getItem("SavedVerbsList");
-
-      
-   
-      if (SavedVerbsListStr != "") {
-        this.Verbs = JSON.parse(SavedVerbsListStr);
-        this.GetVerb();
-    } else {
-        this.GetVerbList();
-    }
 
   }
 
   GetVerbList() {
       this.verbService.getVerbs(this.SelectedVerbTypes.includes('ER'),
           this.SelectedVerbTypes.includes('IR'),
-          this.SelectedVerbTypes.includes('RE'),
-          this.SelectedAuxilaryVerbs.includes('Avoir'),
-          this.SelectedAuxilaryVerbs.includes('Etre')).subscribe(verbs => {
+          this.SelectedVerbTypes.includes('RE')).subscribe(verbs => {
               this.Verbs = verbs;
               localStorage.setItem("SavedVerbsList", JSON.stringify(this.Verbs)); 
               this.GetVerb();
@@ -80,9 +77,9 @@ export class VerbsComponent {
 
       if (!this.AlwaysShowHint)
           this.ShowHint = false;
-
-      this.Verb = this.GetRandomVerb();
       this.Tense = this.GetRandomTense();
+      this.Verb = this.GetRandomVerb();
+
       this.Pronoun = this.RandomPronoun();
       this.GetVerbRootAndEnding();
       this.CorrectAnswers = this.GetAnswer();
@@ -94,7 +91,7 @@ export class VerbsComponent {
       var lowerCaseAnswers: string[] = [];
       var isSame: boolean = false;
       this.CorrectAnswers.forEach((value) => {
-          var compared = this.CompareAnswers(value.toLowerCase(), this.UsersAnswer.toLowerCase());
+          var compared = this.CompareAnswers(value.toLowerCase(), this.UsersAnswer.toLowerCase().trim());
           if (compared) isSame = true;
       });
 
@@ -110,8 +107,15 @@ export class VerbsComponent {
   }
 
   GetRandomVerb() {
+      if(this.Tense == "Passé Composé"){
+        return this.PasseComposeVerbs[Math.floor(Math.random() * this.PasseComposeVerbs.length)];
+      } else if(this.Tense == "Present"){
+        return this.PresentTenseVerbs[Math.floor(Math.random() * this.PresentTenseVerbs.length)];
+      }
+
       return this.Verbs[Math.floor(Math.random() * this.Verbs.length)];
   }
+
 
   RandomPronoun() {
       return this.SelectedPronouns[Math.floor(Math.random() * this.SelectedPronouns.length)];
@@ -152,77 +156,10 @@ export class VerbsComponent {
           answers.push(answer);
       } //End Future
 
-
       if (this.Tense == "Passé Composé") {
-          let auxVerb = "";
-          if (this.Verb.usesEtre) {
-              if (this.Pronoun == "Je") {
-                  auxVerb = "Suis";
-
-                  answers.push(auxVerb + " " + this.Verb.pastParticiple);
-                  answers.push(auxVerb + " " + this.Verb.pastParticiple + "e");
-              } else if (this.Pronoun == "Tu") {
-                  auxVerb = "Es";
-
-                  answers.push(auxVerb + " " + this.Verb.pastParticiple);
-                  answers.push(auxVerb + " " + this.Verb.pastParticiple + "e");
-              } else if (this.Pronoun == "Il") {
-                  auxVerb = "Est";
-
-                  answers.push(auxVerb + " " + this.Verb.pastParticiple);
-              } else if (this.Pronoun == "On") {
-                  auxVerb = "Est";
-
-                  answers.push(auxVerb + " " + this.Verb.pastParticiple);
-                  answers.push(auxVerb + " " + this.Verb.pastParticiple + "s");
-                  answers.push(auxVerb + " " + this.Verb.pastParticiple + "e");
-                  answers.push(auxVerb + " " + this.Verb.pastParticiple + "es");
-              } else if (this.Pronoun == "Elle") {
-                  auxVerb = "Est";
-
-                  answers.push(auxVerb + " " + this.Verb.pastParticiple + "e");
-              } else if (this.Pronoun == "Nous") {
-                  auxVerb = "Sommes";
-
-                  answers.push(auxVerb + " " + this.Verb.pastParticiple + "s");
-                  answers.push(auxVerb + " " + this.Verb.pastParticiple + "es");
-              } else if (this.Pronoun == "Vous") {
-                  auxVerb = "Etes";
-
-                  answers.push(auxVerb + " " + this.Verb.pastParticiple);
-                  answers.push(auxVerb + " " + this.Verb.pastParticiple + "e");
-                  answers.push(auxVerb + " " + this.Verb.pastParticiple + "s");
-                  answers.push(auxVerb + " " + this.Verb.pastParticiple + "es");
-              } else if (this.Pronoun == "Ils") {
-                  auxVerb = "Sont";
-
-                  answers.push(auxVerb + " " + this.Verb.pastParticiple + "s");
-              } else if (this.Pronoun == "Elles") {
-                  auxVerb = "Sont";
-
-                  answers.push(auxVerb + " " + this.Verb.pastParticiple + "es");
-              }
-              this.Hint = "This verb uses 'Etre' .The base past participle for this verb is '" + this.Verb.pastParticiple + "', but the ending of the past participle changes with gender and number.";
-
-          } else {
-              if (this.Pronoun == "Je") {
-                  auxVerb = "Ai";
-              } else if (this.Pronoun == "Tu") {
-                  auxVerb = "As";
-              } else if (this.Pronoun == "On" || this.Pronoun == "Elle" || this.Pronoun == "Il") {
-                  auxVerb = "A";
-              } else if (this.Pronoun == "Nous") {
-                  auxVerb = "Avons";
-              } else if (this.Pronoun == "Vous") {
-                  auxVerb = "Avez";
-              } else if (this.Pronoun == "Ils" || this.Pronoun == "Elles") {
-                  auxVerb = "ont";
-              }
-              this.Hint = "This verb uses 'Avoir'. The past participle for this verb is '" + this.Verb.pastParticiple + "'.";
-              answers.push(auxVerb + " " + this.Verb.pastParticiple);
-
-          }
-      } //end Passe Compose
+        answers = this.passeComposeService.SortVerbs(this.Verb, this.VerbEnding, this.Pronoun, this.VerbRoot);
+        this.Hint = this.passeComposeService.getHint();
+     } //end Passe Compose
 
       return answers;
   }
@@ -234,18 +171,23 @@ export class VerbsComponent {
       }
   }
 
-
-
   SaveSelection() {
-      localStorage.setItem("VerbEndings", JSON.stringify(this.SelectedVerbTypes));
-      localStorage.setItem("Tenses", JSON.stringify(this.SelectedTenses));
-      localStorage.setItem("AuxVerbs", JSON.stringify(this.SelectedAuxilaryVerbs));
-      localStorage.setItem("Pronouns", JSON.stringify(this.SelectedPronouns));
-      localStorage.setItem("AlwaysShowHint", JSON.stringify(this.AlwaysShowHint));
-      localStorage.setItem("EnglishTrans", JSON.stringify(this.ShowEnglishTranslation));
+        let FrenchVerbDrills: LocalStorageObject;
+        FrenchVerbDrills = {
+            VerbEndings: this.SelectedVerbTypes,
+            Tenses: this.SelectedTenses,
+            AuxVerbs: this.SelectedAuxilaryVerbs,
+            PresentVerbs: this.SelectedPresentTenseOptions,
+            Pronouns: this.SelectedPronouns,
+            AlwaysShowHint: this.AlwaysShowHint,
+            EnglishTrans: this.ShowEnglishTranslation
+        }
+
+
+        localStorage.setItem("FrenchVerbDrills", JSON.stringify(FrenchVerbDrills));
+
+        return FrenchVerbDrills;
   }
-
-
 
   CompareAnswers = (firstWord: string, secondWord: string) => {
       var finalString = "";

@@ -37,14 +37,16 @@ export class PresentTenseService {
                 return this.DevoirVoir();
             } else if (Verb.french == "savoir") {
                 return this.Savoir();
+            } else if (Verb.french == "avoir") {
+                return this.Avoir();
             } else {
                 return this.RegularIR();
             }
         } else if (VerbEnding == "er") {
             if (Verb.french == "aller") {
                 return this.Aller();
-            } else {
-                return this.RegularER();
+            } else if(Verb.presentVerbTypeId == 16) {
+                return this.StemChangingERVerbs();
             }
         } else {
             if (Verb.french == "être") {
@@ -61,6 +63,8 @@ export class PresentTenseService {
                 return this.SuivrePoursuivre();
             } else if (Verb.presentVerbTypeId == 10) {
                 return this.VerbsLikeConnaitre();
+            } else if (Verb.french == "croire"){
+                return this.Croire();
             }
             return this.RegularRE();
         }
@@ -177,6 +181,24 @@ export class PresentTenseService {
         } else {
             return "savent";
         }
+    }   
+    
+    Avoir() {
+        this.Hint = "Avoir is a truly irregular -ir verb. No hint available.";
+
+        if (this.Pronoun == "Je") {
+            return "ai";
+        } else if (this.Pronoun == "Tu") {
+            return "as";
+        } else if (this.Pronoun == "On" || this.Pronoun == "Elle" || this.Pronoun == "Il") {
+            return "a";
+        } else if (this.Pronoun == "Nous") {
+            return "avons";
+        } else if (this.Pronoun == "Vous") {
+            return "avez";
+        } else {
+            return "ont";
+        }
     }
 
     PouvoirVouloir() {
@@ -214,6 +236,12 @@ export class PresentTenseService {
         } else if (this.Pronoun == "Tu") {
             ending = "es";
         } else if (this.Pronoun == "Nous") {
+            if(this.Verb.presentVerbTypeId == 16){
+                var smallerRoot = this.VerbRoot.substring(0, this.VerbRoot.length - 1);
+                ending = "çons";
+                this.Hint = "Stem Changing -er verbs like " + this.Verb.french + " change the c to a ç in the nous form";
+                return smallerRoot + ending;
+            }
             ending = "ons";
         } else if (this.Pronoun == "Vous") {
             ending = "ez";
@@ -221,6 +249,31 @@ export class PresentTenseService {
             ending = "ent";
         }
         this.Hint = "Regular '" + this.Pronoun + "' -er verbs take the root and add '" + ending + "'.";
+
+        return this.VerbRoot + ending;
+    }
+    
+    StemChangingERVerbs(){
+        var ending = "";
+
+        if (this.Pronoun == "Je" || this.Pronoun == "On" || this.Pronoun == "Elle" || this.Pronoun == "Il") {
+            ending = "e";
+        } else if (this.Pronoun == "Tu") {
+            ending = "es";
+        } else if (this.Pronoun == "Nous") {
+            if(this.Verb.presentVerbTypeId == 16){
+                var smallerRoot = this.VerbRoot.substring(0, this.VerbRoot.length - 1);
+                ending = "çons";
+                this.Hint = "Stem Changing -er verbs like " + this.Verb.french + " change the c to a ç in the nous form";
+                return smallerRoot + ending;
+            }
+            ending = "ons";
+        } else if (this.Pronoun == "Vous") {
+            ending = "ez";
+        } else if (this.Pronoun == "Ils" || this.Pronoun == "Elles") {
+            ending = "ent";
+        }
+        this.Hint = "Stem Changing ER verbs conjugate normally (take the root and add '" + ending +"' for '"+this.Pronoun+"' forms) but will change in the nous form.";
 
         return this.VerbRoot + ending;
     }
@@ -396,20 +449,40 @@ export class PresentTenseService {
         var smallerRoot = this.VerbRoot.substring(0, this.VerbRoot.length - 2);
 
         if (this.Pronoun == "Je" || this.Pronoun == "Tu") {
-            ending = "s";
+            ending = "is";
         } else if (this.Pronoun == "On" || this.Pronoun == "Elle" || this.Pronoun == "Il") {
             ending = "ît";
         } else if (this.Pronoun == "Nous") {
-            ending = "ssons";
+            ending = "issons";
         } else if (this.Pronoun == "Vous") {
-            ending = "ssez";
+            ending = "issez";
         } else if (this.Pronoun == "Ils" || this.Pronoun == "Elles") {
-            ending = "ssent";
+            ending = "issent";
         }
 
         this.Hint = "Irregular Ir Verbs like this will drop the last 4 letters 'ître' and use irregular endings. In this case, '" + ending + "'.";
 
         return smallerRoot + ending;
+    }
+
+    Croire() {
+        var ending = "";
+
+        if (this.Pronoun == "Je" || this.Pronoun == "Tu") {
+            ending = "ois";
+        } else if (this.Pronoun == "On" || this.Pronoun == "Elle" || this.Pronoun == "Il") {
+            ending = "oit";
+        } else if (this.Pronoun == "Nous") {
+            ending =  "oyons";
+        } else if (this.Pronoun == "Vous") {
+            ending = "oyez";
+        } else {
+            ending = "oient";
+
+        }
+
+        this.Hint = "Irregular RE. In the '"+ this.Pronoun +"' form, you will take the 'cro' root and add '"+ ending +"'";
+        return "cro" + ending;
     }
 
 }

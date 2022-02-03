@@ -10,6 +10,7 @@ import { HttpClientModule } from '@angular/common/http';
 import {CheckboxModule} from 'primeng/checkbox';
 import {DialogModule} from 'primeng/dialog';
 import {InputTextareaModule} from 'primeng/inputtextarea';
+import {ToastModule} from 'primeng/toast';
 
 import { VerbsComponent } from './verbs/verbs.component';
 import { VerbsSettingsComponent } from './verbs-settings/verbs-settings.component';
@@ -29,6 +30,7 @@ import { VerbsSettingsComponent } from './verbs-settings/verbs-settings.componen
     DialogModule,
     HttpClientModule,
     InputTextareaModule,
+    ToastModule,
     BrowserAnimationsModule
   ],
   providers: [],

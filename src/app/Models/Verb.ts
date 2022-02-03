@@ -3,7 +3,7 @@ export interface Verb{
     french: string;
     english: string;
     pastParticiple: string;
-    isIrregular: boolean;
+    irregularPastParticiple: boolean;
     usesEtre: boolean;
     presentVerbTypeId: number;
     futureVerbTypeId: number;
