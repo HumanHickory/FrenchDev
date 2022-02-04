@@ -6,8 +6,8 @@ import { HttpClient, HttpParams } from '@angular/common/http'
     providedIn: 'root'
 })
 export class VerbService {
-    apiURL: string = "https://frenchapi.azurewebsites.net/api/";
-    //apiURL: string = "https://localhost:44311/api/";
+    //apiURL: string = "https://frenchapi.azurewebsites.net/api/";
+    apiURL: string = "https://localhost:44311/api/";
     constructor(private http: HttpClient) {
     }
 
@@ -16,8 +16,6 @@ export class VerbService {
             .set('ErVerbs', ER)
             .set('IrVerbs', IR)
             .set('ReVerbs', RE)
-            .set('UsesAvoir', true)
-            .set('UsesEtre', true)
 
 
         return this.http.get<Array<Verb>>(this.apiURL + "verb", {params});

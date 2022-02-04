@@ -27,6 +27,8 @@ export class FuturService {
         if (Verb.futureVerbTypeId == 7) {
             this.TrueIrregulars();
             return this.VerbRoot + this.BaseRule();       
+        } else if (Verb.futureVerbTypeId == 1 || Verb.futureVerbTypeId == 5) {
+            return this.StemChangingERVerbs_DoubleConsonate(this.BaseRule());
         } else {
             return this.RegularVerbs(this.BaseRule());
         }
@@ -123,9 +125,16 @@ export class FuturService {
             this.VerbRoot = "verr";
         } else if (this.Verb.french == "revoir") {
             this.VerbRoot = "reverr";
+        } else if (this.Verb.french == "appartenir") {
+            this.VerbRoot = "appartiendr";
         }
 
         this.Hint = "This is an irregular verb. The root changes to '" + this.VerbRoot + "'.";
+    }
+
+    StemChangingERVerbs_DoubleConsonate(ending:string){
+        var lastLetter = this.VerbRoot.substring(this.VerbRoot.length -1);
+        return this.VerbRoot + lastLetter + "er" + ending;
 
     }
 

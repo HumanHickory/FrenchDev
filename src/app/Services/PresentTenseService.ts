@@ -27,10 +27,12 @@ export class PresentTenseService {
 
             if (Verb.presentVerbTypeId == 12) {
                 return this.VerbsLikePartir();
-            } else if (verbLast4 == "llir" || verbLast4 == "frir" || verbLast4 == "vrir") {
-                return this.RegularER()
+            } else if (Verb.presentVerbTypeId == 13) {
+                return this.RegularER();
             } else if (Verb.presentVerbTypeId == 14) {
                 return this.VerbsLikeVenir();
+            } else if (Verb.presentVerbTypeId == 15) {
+                return this.RecevoirDecevoir();
             } else if (Verb.french == "pouvoir" || Verb.french == "vouloir") {
                 return this.PouvoirVouloir();
             } else if (Verb.french == "devoir" || Verb.french == "voir") {
@@ -46,8 +48,14 @@ export class PresentTenseService {
             if (Verb.french == "aller") {
                 return this.Aller();
             } else if(Verb.presentVerbTypeId == 16) {
-                return this.StemChangingERVerbs();
-            }
+                return this.StemChangingERVerbs_CerGer();
+            } else if(Verb.presentVerbTypeId == 17) {
+                return this.StemChangingERVerbs_DoubleConsonate();
+            } else if(Verb.presentVerbTypeId == 20) {
+                return this.VerbsLikeConsiderer();
+            } 
+
+            return this.RegularER();
         } else {
             if (Verb.french == "être") {
                 return this.Etre();
@@ -65,10 +73,12 @@ export class PresentTenseService {
                 return this.VerbsLikeConnaitre();
             } else if (Verb.french == "croire"){
                 return this.Croire();
+            } else if (Verb.presentVerbTypeId == 7) {
+                return this.VerbsLikePeindre();
             }
             return this.RegularRE();
         }
-
+        
         return "ERROR";
     }
 
@@ -165,6 +175,28 @@ export class PresentTenseService {
         return firstLetter + ending;
     }
 
+    RecevoirDecevoir(){
+        var firstTwoLetters = this.VerbRoot.substring(0, 2);
+        var ending = "";
+
+        if (this.Pronoun == "Je" || this.Pronoun == "Tu") {
+            ending = "çois";
+        } else if (this.Pronoun == "On" || this.Pronoun == "Elle" || this.Pronoun == "Il") {
+            ending = "çoit";
+        } else if (this.Pronoun == "Nous") {
+            ending = "cevons";
+        } else if (this.Pronoun == "Vous") {
+            ending = "cevez";
+        } else if (this.Pronoun == "Ils" || this.Pronoun == "Elles") {
+            ending = "çoivent";
+        }
+
+        this.Hint = "For '"+this.Pronoun+"' forms, take the first two letters and add '"+ ending +"'.";
+
+
+        return firstTwoLetters + ending;
+    }
+
     Savoir() {
         this.Hint = "Savoir is a truly irregular -ir verb.";
 
@@ -227,6 +259,7 @@ export class PresentTenseService {
 
 
 
+
     /*ER VERBS */
     RegularER() {
         var ending = "";
@@ -236,12 +269,6 @@ export class PresentTenseService {
         } else if (this.Pronoun == "Tu") {
             ending = "es";
         } else if (this.Pronoun == "Nous") {
-            if(this.Verb.presentVerbTypeId == 16){
-                var smallerRoot = this.VerbRoot.substring(0, this.VerbRoot.length - 1);
-                ending = "çons";
-                this.Hint = "Stem Changing -er verbs like " + this.Verb.french + " change the c to a ç in the nous form";
-                return smallerRoot + ending;
-            }
             ending = "ons";
         } else if (this.Pronoun == "Vous") {
             ending = "ez";
@@ -253,29 +280,71 @@ export class PresentTenseService {
         return this.VerbRoot + ending;
     }
     
-    StemChangingERVerbs(){
+    StemChangingERVerbs_CerGer(){
         var ending = "";
+        var lastLetter = this.VerbRoot.substring(this.VerbRoot.length -1);
+
+        if(lastLetter == "c"){
+            this.Hint = "Verbs like this will conjugate normally, but will change c => ç in the nous form.";
+        } else {
+            this.Hint = "Verbs like this will conjugate normally, but will add an 'e' after the 'g' in the nous form.";
+        }
 
         if (this.Pronoun == "Je" || this.Pronoun == "On" || this.Pronoun == "Elle" || this.Pronoun == "Il") {
             ending = "e";
         } else if (this.Pronoun == "Tu") {
             ending = "es";
         } else if (this.Pronoun == "Nous") {
-            if(this.Verb.presentVerbTypeId == 16){
-                var smallerRoot = this.VerbRoot.substring(0, this.VerbRoot.length - 1);
-                ending = "çons";
-                this.Hint = "Stem Changing -er verbs like " + this.Verb.french + " change the c to a ç in the nous form";
-                return smallerRoot + ending;
-            }
-            ending = "ons";
+                if(lastLetter == "c"){
+                    var smallerRoot = this.VerbRoot.substring(0, this.VerbRoot.length - 1);
+                    ending = "çons";
+                    return smallerRoot + ending;
+                } else { //if it's g
+                    ending = "eons"
+                }            
         } else if (this.Pronoun == "Vous") {
             ending = "ez";
         } else if (this.Pronoun == "Ils" || this.Pronoun == "Elles") {
             ending = "ent";
         }
-        this.Hint = "Stem Changing ER verbs conjugate normally (take the root and add '" + ending +"' for '"+this.Pronoun+"' forms) but will change in the nous form.";
 
         return this.VerbRoot + ending;
+    }
+    
+    StemChangingERVerbs_DoubleConsonate(){
+        var ending = "";
+        var lastLetter = this.VerbRoot.substring(this.VerbRoot.length -1);
+
+        if (this.Pronoun == "Je" || this.Pronoun == "On" || this.Pronoun == "Elle" || this.Pronoun == "Il") {
+            ending = lastLetter + "e";
+        } else if (this.Pronoun == "Tu") {
+            ending = lastLetter + "es";
+        } else if (this.Pronoun == "Nous") {
+            ending = "ons";
+        } else if (this.Pronoun == "Vous") {
+            ending = "ez";
+        } else if (this.Pronoun == "Ils" || this.Pronoun == "Elles") {
+            ending = lastLetter + "ent";
+        }
+        this.Hint = "Verbs like this will double the '"+lastLetter +"' in all forms but 'nous' and 'vous'.";
+
+        return this.VerbRoot + ending;
+    }
+
+    VerbsLikeConsiderer(){
+        this.Hint = "Conjugate like regular ER verbs, but change the é to è except for for 'nous' and 'vous'"
+        if (this.Pronoun == "Je" || this.Pronoun == "On" || this.Pronoun == "Elle" || this.Pronoun == "Il") {
+            return this.é_to_è() + "e";
+        } else if (this.Pronoun == "Tu") {
+            return this.é_to_è() + "es";
+        } else if (this.Pronoun == "Nous") {
+            return this.VerbRoot + "ons";
+        } else if (this.Pronoun == "Vous") {
+            return this.VerbRoot + "ez";
+        } else {
+            return this.é_to_è() + "ent";
+        }
+
     }
 
     Aller() {
@@ -298,7 +367,22 @@ export class PresentTenseService {
 
 
 
+    é_to_è(){
+        var wordArray = this.VerbRoot.split("").reverse();  
 
+        var cont = true;
+        var i = 0;
+        wordArray.forEach((letter) => { 
+            if(letter == "é" && cont){
+                wordArray[i] = "è";
+                cont = false;
+            }
+            i += 1;
+        });
+
+        return wordArray.reverse().join("");
+
+    }
 
 
     /*RE VERBS */
@@ -469,20 +553,42 @@ export class PresentTenseService {
         var ending = "";
 
         if (this.Pronoun == "Je" || this.Pronoun == "Tu") {
-            ending = "ois";
+            ending = "is";
         } else if (this.Pronoun == "On" || this.Pronoun == "Elle" || this.Pronoun == "Il") {
-            ending = "oit";
+            ending = "it";
         } else if (this.Pronoun == "Nous") {
-            ending =  "oyons";
+            ending =  "yons";
         } else if (this.Pronoun == "Vous") {
-            ending = "oyez";
+            ending = "yez";
         } else {
-            ending = "oient";
-
+            ending = "ient";
         }
 
         this.Hint = "Irregular RE. In the '"+ this.Pronoun +"' form, you will take the 'cro' root and add '"+ ending +"'";
         return "cro" + ending;
+    }
+
+    VerbsLikePeindre(){
+        var ending = "";
+        var smallerRoot = this.VerbRoot.substring(0, this.VerbRoot.length - 1);
+
+        if (this.Pronoun == "Je" || this.Pronoun == "Tu") {
+            ending = "s";
+        } else if (this.Pronoun == "On" || this.Pronoun == "Elle" || this.Pronoun == "Il") {
+            ending = "t";
+        } else if (this.Pronoun == "Nous") {
+            smallerRoot = this.VerbRoot.substring(0, this.VerbRoot.length - 2);
+            ending =  "gnons";
+        } else if (this.Pronoun == "Vous") {
+            smallerRoot = this.VerbRoot.substring(0, this.VerbRoot.length - 2);
+            ending =  "gnez";
+        } else {
+            smallerRoot = this.VerbRoot.substring(0, this.VerbRoot.length - 2);
+            ending =  "gnent";
+        }
+
+        this.Hint = "Irregular verbs like '"+ this.Verb.french +"' drop the 'd' in all forms, and add a 'g' in front of the 'n' in plural forms.";
+        return smallerRoot + ending;
     }
 
 }

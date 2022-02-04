@@ -11,8 +11,7 @@ export class ErrorService {
     constructor(private http: HttpClient) {
     }
 
-    reportError(error: ErrorModel) {
-        return this.http.post<boolean>(this.apiURL + "error", error);
+    test(errorDetails: ErrorModel){
+        return this.http.post<boolean>("https://localhost:44311/api/error/ReportError", errorDetails);
     }
-
 }
