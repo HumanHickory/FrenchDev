@@ -31,10 +31,10 @@ export class PresentTenseService {
                 return this.RegularER();
             } else if (Verb.presentVerbTypeId == 14) {
                 return this.VerbsLikeVenir();
-            } else if (Verb.presentVerbTypeId == 15) {
-                return this.RecevoirDecevoir();
             } else if (Verb.french == "pouvoir" || Verb.french == "vouloir") {
                 return this.PouvoirVouloir();
+            } else if (Verb.french == "recevoir" || Verb.french == "decevoir") {
+                return this.RecevoirDecevoir();
             } else if (Verb.french == "devoir" || Verb.french == "voir") {
                 return this.DevoirVoir();
             } else if (Verb.french == "savoir") {

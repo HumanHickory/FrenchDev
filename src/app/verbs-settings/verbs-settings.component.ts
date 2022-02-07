@@ -22,10 +22,12 @@ export class VerbsSettingsComponent implements OnInit {
   PresentTenseOptions: string[] = ["Regular", "Irregular"];
   FuturTenseOptions: string[] = ["Regular", "Irregular"];
   PasseComposeOptions: string[] = ["Regular", "Irregular"];
+  ImparfaitOptions: string[] = ["Regular", "Irregular"];
   SelectedAuxilaryVerbs: string[] = ["Avoir", "Etre"];
   SelectedPresentTenseOptions: string[] = ["Regular", "Irregular"];
   SelectedFuturTenseOptions: string[] = ["Regular", "Irregular"];
   SelectedPasseComposeOptions: string[] = ["Regular", "Irregular"];
+  SelectedImparfaitOptions: string[] = ["Regular", "Irregular"];
   AlwaysShowHint: boolean = false;
   ShowHint: boolean = false;
   ShowEnglishTranslation: boolean = true;
@@ -34,6 +36,9 @@ export class VerbsSettingsComponent implements OnInit {
 
   includesPasseCompose!: boolean;
   includesPresent!: boolean;
+  includesFutur!: boolean;
+  includesImparfait!: boolean;
+  showAdditionalOptionsHeader!: boolean;
   CallReset: boolean = false;
 
   constructor(
@@ -61,6 +66,9 @@ export class VerbsSettingsComponent implements OnInit {
 
       this.SelectedAuxilaryVerbs = this.UserPreferences.AuxVerbs;
       this.SelectedPresentTenseOptions = this.UserPreferences.PresentVerbs;
+      this.SelectedPasseComposeOptions = this.UserPreferences.PasseComposeVerbs;
+      this.SelectedFuturTenseOptions = this.UserPreferences.FutureVerbs;
+      this.SelectedImparfaitOptions = this.UserPreferences.ImparfaitVerbs;
       this.SelectedPronouns = this.UserPreferences.Pronouns;
       this.ShowEnglishTranslation = this.UserPreferences.EnglishTrans;
       this.AlwaysShowHint = this.UserPreferences.AlwaysShowHint;
@@ -72,6 +80,9 @@ export class VerbsSettingsComponent implements OnInit {
 
       this.SelectedAuxilaryVerbs = this.AuxilaryVerbs;
       this.SelectedPresentTenseOptions = this.PresentTenseOptions;
+      this.SelectedPasseComposeOptions = this.PasseComposeOptions;
+      this.SelectedFuturTenseOptions = this.FuturTenseOptions;
+      this.SelectedImparfaitOptions = this.ImparfaitOptions;
       this.SelectedPronouns = this.Pronouns;
       this.ShowEnglishTranslation = this.ShowEnglishTranslation;
       this.AlwaysShowHint = this.AlwaysShowHint;
@@ -116,16 +127,23 @@ export class VerbsSettingsComponent implements OnInit {
 
     if (this.SelectedTenses.includes("Futur")) {
       this.FutureTenseCreateAbridgedVerbList(false);
+    }    
+    
+    if (this.SelectedTenses.includes("Imparfait")) {
+      this.ImparfaitCreateAbridgedVerbList(false);
     }
   }
 
-  async Reset() {
+  async Reset(closeDisplay: boolean) {
     this.verbsComp.CountCorrect = 0;
     this.UpdateVerbComponentSelectedOptions();
     await this.GetVerbList();
     this.CreateAbridgedVerbLists();
     this.verbsComp.GetVerb();
 
+    this.verbsComp.UsersAnswer = "";
+
+    if(closeDisplay)
     this.verbsComp.Display = false;
   }
 
@@ -147,6 +165,9 @@ export class VerbsSettingsComponent implements OnInit {
   UpdateVerbComponentSelectedOptions() {
     this.verbsComp.SelectedAuxilaryVerbs = this.SelectedAuxilaryVerbs;
     this.verbsComp.SelectedPresentTenseOptions = this.SelectedPresentTenseOptions;
+    this.verbsComp.SelectedPasseComposeOptions = this.SelectedPasseComposeOptions;
+    this.verbsComp.SelectedImparfaitOptions = this.SelectedImparfaitOptions;
+    this.verbsComp.SelectedFuturTenseOptions = this.SelectedFuturTenseOptions;
     this.verbsComp.SelectedPronouns = this.SelectedPronouns;
     this.verbsComp.SelectedTenses = this.SelectedTenses;
     this.verbsComp.SelectedVerbTypes = this.SelectedVerbTypes;
@@ -158,16 +179,33 @@ export class VerbsSettingsComponent implements OnInit {
   }
 
   ToggleAdditionalTenseOptions() {
+    this.showAdditionalOptionsHeader = false;
     if (this.SelectedTenses.includes("Passé Composé")) {
       this.includesPasseCompose = true;
+      this.showAdditionalOptionsHeader = true;
     } else {
       this.includesPasseCompose = false;
-    }
+    } 
 
     if (this.SelectedTenses.includes("Present")) {
       this.includesPresent = true;
+      this.showAdditionalOptionsHeader = true;
     } else {
       this.includesPresent = false;
+    }    
+    
+    if (this.SelectedTenses.includes("Imparfait")) {
+      this.includesImparfait = true;
+      this.showAdditionalOptionsHeader = true;
+    } else {
+      this.includesImparfait = false;
+    }    
+    
+    if (this.SelectedTenses.includes("Futur")) {
+      this.includesFutur = true;
+      this.showAdditionalOptionsHeader = true;
+    } else {
+      this.includesFutur = false;
     }
   }
 
@@ -211,8 +249,16 @@ export class VerbsSettingsComponent implements OnInit {
 
   }
 
-  FutureTenseCreateAbridgedVerbList(save: boolean) {
-    if (this.SelectedFuturTenseOptions == this.FuturTenseOptions) {
+  FutureTenseCreateAbridgedVerbList(save: boolean) {3
+    if (this.SelectedFuturTenseOptions.length == 0) {
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Must have one or more options selected.' });
+      this.SelectedFuturTenseOptions = [];
+      this.UserPreferences.FutureVerbs.forEach((option) => {
+        this.SelectedFuturTenseOptions.push(option);
+      });
+    }   
+
+    if (this.SelectedFuturTenseOptions.length == this.FuturTenseOptions.length) {
       this.verbsComp.FuturVerbs = this.verbsComp.Verbs;
     } else {
       let abridgedVerbList: Array<Verb> = [];
@@ -241,17 +287,25 @@ export class VerbsSettingsComponent implements OnInit {
   PasseComposeCreateAbridgedVerbList(save: boolean) {
 
     if (this.SelectedAuxilaryVerbs.length == 0) {
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Must select one or more auxiliary verbs.' });
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Must have one or more auxiliary verbs selected.' });
       this.SelectedAuxilaryVerbs = [];
       this.UserPreferences.AuxVerbs.forEach((option) => {
         this.SelectedAuxilaryVerbs.push(option);
+      });
+    }    
+    
+    if (this.SelectedPasseComposeOptions.length == 0) {
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Must have one or more options selected.' });
+      this.SelectedPasseComposeOptions = [];
+      this.UserPreferences.PasseComposeVerbs.forEach((option) => {
+        this.SelectedPasseComposeOptions.push(option);
       });
     }
 
     //TODO: Make sure they can't deselect all irregular/regular options
 
 
-    if (this.SelectedPasseComposeOptions == this.PasseComposeOptions && this.SelectedAuxilaryVerbs == this.AuxilaryVerbs) {
+    if (this.SelectedPasseComposeOptions.length == this.PasseComposeOptions.length && this.SelectedAuxilaryVerbs.length == this.AuxilaryVerbs.length) {
       this.verbsComp.PasseComposeVerbs = this.verbsComp.Verbs;
     } else {
       let abridgedVerbList: Array<Verb> = [];
@@ -287,6 +341,41 @@ export class VerbsSettingsComponent implements OnInit {
     }
   }
 
+  ImparfaitCreateAbridgedVerbList(save: boolean) {3
+    if (this.SelectedImparfaitOptions.length == 0) {
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Must have one or more options selected.' });
+      this.SelectedImparfaitOptions = [];
+      this.UserPreferences.ImparfaitVerbs.forEach((option) => {
+        this.SelectedImparfaitOptions.push(option);
+      });
+    }   
+
+    if (this.SelectedImparfaitOptions.length == this.ImparfaitOptions.length) {
+      this.verbsComp.ImparfaitVerbs = this.verbsComp.Verbs;
+    } else {
+      let abridgedVerbList: Array<Verb> = [];
+
+      if (this.SelectedImparfaitOptions.includes('Regular')) {
+        this.verbsComp.Verbs.forEach((verb) => {
+          if (verb.presentVerbTypeId != 16 && verb.french != "être") {
+            abridgedVerbList.push(verb);
+          }
+        });
+      } else {
+        this.verbsComp.Verbs.forEach((verb) => {
+          if (verb.presentVerbTypeId == 16 || verb.french == "être") {
+            abridgedVerbList.push(verb);
+          }
+        });
+      }
+
+      this.verbsComp.ImparfaitVerbs = abridgedVerbList;
+
+      if (save)
+        this.Save();
+    }
+  }
+
   
   SaveTenses() {
 
@@ -311,6 +400,10 @@ export class VerbsSettingsComponent implements OnInit {
 
     if (this.SelectedTenses.includes("Futur")) {
       this.FutureTenseCreateAbridgedVerbList(false);
+    }    
+    
+    if (this.SelectedTenses.includes("Imperfait")) {
+      this.ImparfaitCreateAbridgedVerbList(false);
     }
 
     this.Save();
@@ -326,7 +419,7 @@ export class VerbsSettingsComponent implements OnInit {
       });
     }
 
-    this.Reset();
+    this.Reset(false);
   }
 
   SavePronouns(){

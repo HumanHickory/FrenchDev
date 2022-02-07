@@ -23,6 +23,9 @@ export class VerbsComponent {
     SelectedTenses: string[] = ["Present", "Futur", "Imparfait", "Passé Composé"];
     SelectedAuxilaryVerbs: string[] = ["Avoir", "Etre"];
     SelectedPresentTenseOptions: string[] = ["Regular", "Irregular"];
+    SelectedPasseComposeOptions: string[] = ["Regular", "Irregular"];
+    SelectedFuturTenseOptions: string[] = ["Regular", "Irregular"];
+    SelectedImparfaitOptions: string[] = ["Regular", "Irregular"];
     Verbs: Array<Verb> = [];
     Verb!: Verb;
     Tense: string = "";
@@ -70,7 +73,13 @@ export class VerbsComponent {
         if (!this.AlwaysShowHint)
             this.ShowHint = false;
         this.Tense = this.GetRandomTense();
-        this.Verb = this.GetRandomVerb();
+        
+        var newVerb= this.GetRandomVerb();
+        if(newVerb == this.Verb){
+            this.Verb = this.GetRandomVerb(); 
+        } else {
+            this.Verb = newVerb;
+        }
 
         this.Pronoun = this.RandomPronoun();
         this.GetVerbRootAndEnding();
@@ -95,14 +104,19 @@ export class VerbsComponent {
             this.GetVerb();
         } else {
             this.Correct = "textDanger";
+            this.CountCorrect = 0;
         }
     }
 
     GetRandomVerb() {
         if (this.Tense == "Passé Composé") {
-            return this.PasseComposeVerbs[Math.floor(Math.random() * this.PasseComposeVerbs.length)];
+             return this.PasseComposeVerbs[Math.floor(Math.random() * this.PasseComposeVerbs.length)];
         } else if (this.Tense == "Present") {
             return this.PresentTenseVerbs[Math.floor(Math.random() * this.PresentTenseVerbs.length)];
+        } else if (this.Tense == "Futur") {
+            return this.FuturVerbs[Math.floor(Math.random() * this.FuturVerbs.length)];
+        } else if (this.Tense == "Imparfait") {
+            return this.ImparfaitVerbs[Math.floor(Math.random() * this.ImparfaitVerbs.length)];
         }
 
         return this.Verbs[Math.floor(Math.random() * this.Verbs.length)];
@@ -170,6 +184,9 @@ export class VerbsComponent {
             Tenses: this.SelectedTenses,
             AuxVerbs: this.SelectedAuxilaryVerbs,
             PresentVerbs: this.SelectedPresentTenseOptions,
+            PasseComposeVerbs: this.SelectedPasseComposeOptions,
+            ImparfaitVerbs: this.SelectedImparfaitOptions,
+            FutureVerbs: this.SelectedFuturTenseOptions,
             Pronouns: this.SelectedPronouns,
             AlwaysShowHint: this.AlwaysShowHint,
             EnglishTrans: this.ShowEnglishTranslation
@@ -229,6 +246,8 @@ export class VerbsComponent {
 
             this.ErrorDescription = "";
             this.DisplayError = false;
+        }, error => {
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Could not record error at this time.' });
         });
 
 
