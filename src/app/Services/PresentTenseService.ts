@@ -41,6 +41,8 @@ export class PresentTenseService {
                 return this.Savoir();
             } else if (Verb.french == "avoir") {
                 return this.Avoir();
+            } else if (Verb.french == "vivre" || Verb.french == "survivre") {
+                return this.VivreSurvivre();
             } else {
                 return this.RegularIR();
             }
@@ -53,6 +55,8 @@ export class PresentTenseService {
                 return this.StemChangingERVerbs_DoubleConsonate();
             } else if(Verb.presentVerbTypeId == 20) {
                 return this.VerbsLikeConsiderer();
+            } else if(Verb.presentVerbTypeId == 21) {
+                return this.VerbsLikeEnvoyer();
             } 
 
             return this.RegularER();
@@ -255,6 +259,25 @@ export class PresentTenseService {
         return firstLetter + ending;
     }
 
+    VivreSurvivre(){
+        var ending = "";
+
+        if (this.Pronoun == "Je" || this.Pronoun == "Tu") {
+            ending = "vis";
+        } else if (this.Pronoun == "On" || this.Pronoun == "Elle" || this.Pronoun == "Il") {
+            ending = "vit";
+        } else if (this.Pronoun == "Nous") {
+            ending = "vivons";
+        } else if (this.Pronoun == "Vous") {
+            ending = "vivez";
+        } else {
+            ending = "vivent";
+        }
+
+        return this.Verb.french == "survivre" ? "sur" + ending : ending;
+
+    }
+
 
 
 
@@ -329,6 +352,35 @@ export class PresentTenseService {
         this.Hint = "Verbs like this will double the '"+lastLetter +"' in all forms but 'nous' and 'vous'.";
 
         return this.VerbRoot + ending;
+    }
+
+    VerbsLikeEnvoyer(){
+        var ending = "";
+        var endings = [];
+
+        var smallerRoot = this.VerbRoot.substring(0, this.VerbRoot.length - 1)
+        var isAyer = smallerRoot.substring(smallerRoot.length -1) == "a" ? true : false;
+
+        if (this.Pronoun == "Je" || this.Pronoun == "On" || this.Pronoun == "Elle" || this.Pronoun == "Il") {
+            ending = "ie";
+        } else if (this.Pronoun == "Tu") {
+            ending =  "ies";
+        } else if (this.Pronoun == "Nous") {
+            ending = "yons";
+        } else if (this.Pronoun == "Vous") {
+            ending = "yez";
+        } else if (this.Pronoun == "Ils" || this.Pronoun == "Elles") {
+            ending = "ient";
+        }
+        this.Hint = "Verbs like this will change the 'y' to an 'i' in all forms but 'nous' and 'vous'.";
+return smallerRoot + ending;
+ /*        if(isAyer){
+            var optionalEnding = this.RegularER();
+            endings.push(optionalEnding);
+        }
+        endings.push(smallerRoot + ending);
+
+        return endings; */
     }
 
     VerbsLikeConsiderer(){

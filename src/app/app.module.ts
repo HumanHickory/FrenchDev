@@ -14,6 +14,7 @@ import {ToastModule} from 'primeng/toast';
 
 import { VerbsComponent } from './verbs/verbs.component';
 import { VerbsSettingsComponent } from './verbs-settings/verbs-settings.component';
+import { NewsComponent } from './news/news.component';
 
 
 @NgModule({
@@ -21,6 +22,7 @@ import { VerbsSettingsComponent } from './verbs-settings/verbs-settings.componen
     AppComponent,
     VerbsComponent,
     VerbsSettingsComponent,
+    NewsComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,13 +1,12 @@
 import { Injectable } from "@angular/core";
 import { Verb } from "../Models/Verb";
 import { HttpClient, HttpParams } from '@angular/common/http'
+import { environment } from "src/environments/environment";
 
 @Injectable({
     providedIn: 'root'
 })
 export class VerbService {
-    //apiURL: string = "https://frenchapi.azurewebsites.net/api/";
-    apiURL: string = "https://localhost:44311/api/";
     constructor(private http: HttpClient) {
     }
 
@@ -18,15 +17,19 @@ export class VerbService {
             .set('ReVerbs', RE)
 
 
-        return this.http.get<Array<Verb>>(this.apiURL + "verb", {params});
+        return this.http.get<Array<Verb>>(environment.apiUrl() + "verb/GetVerbs", {params});
+    }
+
+    getRecentlyAdded(){
+        return this.http.get<Array<Verb>>(environment.apiUrl() + "verb/GetRecentlyAdded");
     }
 
     getTenses(){
-        return this.http.get<Array<any>>(this.apiURL + "verb/tenses");
+        return this.http.get<Array<any>>(environment.apiUrl() + "verb/GetTenses");
     }
 
     getPronouns(){
-        return this.http.get<Array<any>>(this.apiURL + "verb/pronouns");
+        return this.http.get<Array<any>>(environment.apiUrl() + "verb/GetPronouns");
     }
 
     
