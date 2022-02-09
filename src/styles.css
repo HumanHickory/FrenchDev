@@ -1,10 +1,21 @@
 :root {
-    --primary: #14B8A6;
+    /* --primary: #14B8A6;
     --secondary: rgb(236, 236, 236);
-    --tertiary: rgb(255, 136, 0);
-
+    --tertiary: rgb(255, 136, 0); 
+    
+    
     --primaryDark: #118679;
-    --tertiaryDark: rgb(202, 108, 0);
+    --tertiaryDark: rgb(202, 108, 0); */
+
+    --primary: #002395;
+    --secondary: rgb(236, 236, 236);
+    --tertiary: #ED2939;      
+
+    --primaryDark: #021658;
+    --tertiaryDark: #a5111d;
+
+    --failed: #a5111d;
+
 
 }
 
@@ -13,7 +24,15 @@
 }
 
 .textDanger {
-    color: red;
+    animation: shake 0.30s cubic-bezier(.36,.07,.19,.97);
+    color: var(--primary);
+
+}
+
+.textDangerReanimate {
+    animation: shake2 0.30s cubic-bezier(.36,.07,.19,.97);
+    color: var(--primary);
+
 }
 
 .pointer {
@@ -99,13 +118,59 @@ a:hover {
     font-weight: bold;
 }
 
+a.navbar-brand:hover,
 .nav-link:hover {
-    color:var(--tertiary);
+    color: white;
+    text-decoration: underline;
 }
 
+.p-checkbox .p-checkbox-box.p-highlight {
+    border-color: var(--primary);
+    background: var(--primary);
+}
 
-@media only screen and (max-width: 767px)    {
-    h5 {
-        font-size: 1rem;
+@keyframes shake {
+    10%, 90% {
+      color: var(--failed);
+      transform: translate3d(-1px, 0, 0);
     }
-}
+    
+    20%, 80% {
+      color: var(--failed);
+      transform: translate3d(2px, 0, 0);
+    }
+  
+    30%, 50%, 70% {
+      color: var(--failed);
+      transform: translate3d(-4px, 0, 0);
+    }
+  
+    40%, 60% {
+      color: var(--failed);
+      transform: translate3d(4px, 0, 0);
+    }
+    
+  }
+  
+  @keyframes shake2 {
+    10%, 90% {
+      color: var(--failed);
+      transform: translate3d(-1px, 0, 0);
+    }
+    
+    20%, 80% {
+      color: var(--failed);
+      transform: translate3d(2px, 0, 0);
+    }
+  
+    30%, 50%, 70% {
+      color: var(--failed);
+      transform: translate3d(-4px, 0, 0);
+    }
+  
+    40%, 60% {
+      color: var(--failed);
+      transform: translate3d(4px, 0, 0);
+    }
+    
+  }
