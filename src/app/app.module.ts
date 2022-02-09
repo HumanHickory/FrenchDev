@@ -12,9 +12,9 @@ import {DialogModule} from 'primeng/dialog';
 import {InputTextareaModule} from 'primeng/inputtextarea';
 import {ToastModule} from 'primeng/toast';
 
-import { VerbsComponent } from './verbs/verbs.component';
-import { VerbsSettingsComponent } from './verbs-settings/verbs-settings.component';
-import { NewsComponent } from './news/news.component';
+import { VerbsComponent } from './Views/verbs/verbs.component';
+import { VerbsSettingsComponent } from './Views/verbs-settings/verbs-settings.component';
+import { NewsComponent } from './Views/news/news.component';
 
 
 @NgModule({
@@ -22,7 +22,7 @@ import { NewsComponent } from './news/news.component';
     AppComponent,
     VerbsComponent,
     VerbsSettingsComponent,
-    NewsComponent,
+    NewsComponent
   ],
   imports: [
     BrowserModule,

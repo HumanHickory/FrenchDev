@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { VerbService } from '../Services/VerbServices';
+import { VerbService } from '../../Services/VerbServices';
 import { MessageService } from 'primeng/api';
-import { Verb } from '../Models/Verb';
+import { Verb } from '../../Models/Verb';
 
 @Component({
   selector: 'app-news',

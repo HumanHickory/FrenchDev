@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { VerbsComponent } from '../verbs/verbs.component';
 import { Verb } from 'src/app/Models/Verb';
 import { MessageService } from 'primeng/api';
-import { LocalStorageObject } from '../Models/LocalStorageObject';
+import { LocalStorageObject } from '../../Models/LocalStorageObject';
 import { VerbService } from 'src/app/Services/VerbServices';
 
 @Component({
@@ -14,7 +14,7 @@ import { VerbService } from 'src/app/Services/VerbServices';
 export class VerbsSettingsComponent implements OnInit {
   VerbTypes: string[] = ["ER", "IR", "RE"];
   SelectedVerbTypes: string[] = ["ER", "IR", "RE"];
-  Pronouns: string[] = ["Je", "Ils", "Tu", "Elles", "Elle", "Nous", "Il", "Vous", "On"];
+  Pronouns: string[] = ["Je", "Nous", "Tu", "Vous", "Elle", "Elles", "Il", "Ils", "On"];
   SelectedPronouns: string[] = ["Je", "Tu", "On", "Il", "Elle", "Nous", "Vous", "Ils", "Elles"];
   Tenses: string[] = ["Present", "Futur", "Imparfait", "Passé Composé"];
   SelectedTenses: string[] = ["Present", "Futur", "Imparfait", "Passé Composé"];

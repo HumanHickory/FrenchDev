@@ -4,9 +4,9 @@ import { FuturService } from 'src/app/Services/FuturService';
 import { ImparfaitService } from 'src/app/Services/ImparfaitService';
 import { PresentTenseService } from 'src/app/Services/PresentTenseService';
 import { PasseComposeService } from 'src/app/Services/PasseComposeService';
-import { ErrorService } from '../Services/ErrorService';
-import { ErrorModel } from '../Models/ErrorModel';
-import { LocalStorageObject } from '../Models/LocalStorageObject';
+import { ErrorService } from '../../Services/ErrorService';
+import { ErrorModel } from '../../Models/ErrorModel';
+import { LocalStorageObject } from '../../Models/LocalStorageObject';
 import { MessageService } from 'primeng/api';
 
 @Component({
@@ -68,6 +68,7 @@ export class VerbsComponent {
 
 
     GetVerb() {
+        this.Correct = "textSuccess";
         this.ShowAnswer = false;
 
         if (!this.AlwaysShowHint)
@@ -102,10 +103,14 @@ export class VerbsComponent {
             this.CountCorrect += 1;
             this.UsersAnswer = "";
             this.GetVerb();
-        } else {
+        } else if (!isSame && this.Correct != "textDanger") {
             this.Correct = "textDanger";
             this.CountCorrect = 0;
+        } else {
+            this.Correct = "textDangerReanimate";
+            this.CountCorrect = 0;
         }
+
     }
 
     GetRandomVerb() {
