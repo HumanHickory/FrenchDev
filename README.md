@@ -23,7 +23,7 @@ Run `git push origin HEAD:main
 Must be in main directory (not src).
 If it's the first time doing so, Run 'npm install -g gh-pages
 
-Run `ng build --prod --base-href https://humanhickory.github.io/FrenchDevn/french/
+Run `ng build --prod --base-href https://humanhickory.github.io/FrenchDev/french/
 Run 'gh-pages -d dist
 
 ## Authentication Failure
