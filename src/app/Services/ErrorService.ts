@@ -2,6 +2,8 @@ import { Injectable } from "@angular/core";
 import { Verb } from "../Models/Verb";
 import { HttpClient, HttpParams } from '@angular/common/http'
 import { ErrorModel } from "../Models/ErrorModel";
+import { environment } from "src/environments/environment";
+
 
 @Injectable({
     providedIn: 'root'
@@ -12,6 +14,6 @@ export class ErrorService {
     }
 
     test(errorDetails: ErrorModel){
-        return this.http.post<boolean>("https://localhost:44311/api/error/ReportError", errorDetails);
+        return this.http.post<boolean>(environment.apiUrl() + "/error/ReportError", errorDetails);
     }
 }

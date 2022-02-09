@@ -59,6 +59,7 @@ export class VerbsSettingsComponent implements OnInit {
   GetUserPreferences() {
     let UserPreferencesStr: any = localStorage.getItem("FrenchVerbDrills") == null ? "" : localStorage.getItem("FrenchVerbDrills");
     if (UserPreferencesStr != "") {
+
       this.UserPreferences = JSON.parse(UserPreferencesStr);
       this.SelectedVerbTypes = this.UserPreferences.VerbEndings;
       this.SelectedTenses = this.UserPreferences.Tenses;
