@@ -9,11 +9,10 @@ import { environment } from "src/environments/environment";
     providedIn: 'root'
 })
 export class ErrorService {
-    apiURL: string = "https://localhost:44311/api/";
     constructor(private http: HttpClient) {
     }
 
     test(errorDetails: ErrorModel){
-        return this.http.post<boolean>(environment.apiUrl() + "/error/ReportError", errorDetails);
+        return this.http.post<boolean>(environment.apiUrl() + "error/ReportError", errorDetails);
     }
 }
