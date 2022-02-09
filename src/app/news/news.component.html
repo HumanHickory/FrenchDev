@@ -1,1 +1,9 @@
-<p>news works!</p>
+<h3>News</h3>
+<b class="tertiary-text">BETA</b>
+<br>
+<div class="mt-3">
+    <b>Recently Added Words</b>
+    <ul>
+        <li *ngFor="let verb of Verbs"><span class="primary-text bold">{{verb.french}}</span> - {{verb.english}}</li>
+    </ul>
+</div>
