@@ -4,9 +4,9 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## Check and Remove Origin
 
-Run `git remote -v
+Run 'git remote -v
 
-Run `git remote remove origin
+Run 'git remote remove origin
 
 ## Connect to Proper Origin
 
